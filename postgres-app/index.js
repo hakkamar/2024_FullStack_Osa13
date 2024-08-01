@@ -53,6 +53,8 @@ Blog.init(
   }
 );
 
+Blog.sync();
+
 app.get("/api/blogs", async (req, res) => {
   const blogs = await Blog.findAll();
   res.json(blogs);
@@ -69,6 +71,43 @@ app.post("/api/blogs", async (req, res) => {
     return res.json(blog);
   } catch (error) {
     return res.status(400).json({ error });
+  }
+});
+
+app.get("/api/blogs/:id", async (req, res) => {
+  const blog = await Blog.findByPk(req.params.id);
+  console.log(JSON.stringify(blog, null, 2));
+
+  if (blog) {
+    res.json(blog);
+  } else {
+    res.status(404).end();
+  }
+});
+
+// Liketys....
+app.put("/api/blogs/:id", async (req, res) => {
+  const blog = await Blog.findByPk(req.params.id);
+  if (blog) {
+    blog.likes = blog.likes + 1;
+    await blog.save();
+    res.json(blog);
+  } else {
+    res.status(404).end();
+  }
+});
+
+app.delete("/api/blogs/:id", async (req, res) => {
+  const blog = await Blog.findByPk(req.params.id);
+  if (blog) {
+    await Blog.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.status(204).end();
+  } else {
+    res.status(404).end();
   }
 });
 
