@@ -1,6 +1,7 @@
 const logger = require("./logger");
 //const User = require("../models/user");
-//const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const { SECRET } = require("../util/config");
 
 const requestLogger = (request, response, next) => {
   logger.info("Method:", request.method);
@@ -28,10 +29,29 @@ const errorHandler = (error, request, response, next) => {
     return response.status(401).json({ error: "token expired" });
   } else if (error.name === "SequelizeValidationError") {
     return response.status(400).json({ error: error.message });
+  } else if (error.name === "SequelizeUniqueConstraintError") {
+    return response.status(400).json({ error: error.errors[0].message });
   } else if (error.name === "SequelizeDatabaseError") {
     return response.status(400).json({ error: error.message });
   }
   next(error);
+};
+
+const tokenExtractor = (req, res, next) => {
+  const authorization = req.get("authorization");
+  console.log("authorization", authorization);
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    try {
+      console.log(authorization.substring(7));
+      req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
+    } catch (error) {
+      console.log(error);
+      return res.status(401).json({ error: "token invalid" });
+    }
+  } else {
+    return res.status(401).json({ error: "token missing" });
+  }
+  next();
 };
 
 /*
@@ -64,6 +84,6 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  //tokenExtractor,
+  tokenExtractor,
   //userExtractor,
 };
