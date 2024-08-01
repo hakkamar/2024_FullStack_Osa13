@@ -13,17 +13,17 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  try {
-    console.log(req.body);
-    const blog = await Blog.create(req.body);
-    // jos tarvetta tämäkin käy...
-    //const blog = Blog.build(req.body);
-    //blog.likes = 1;
-    //await blog.save();
-    return res.json(blog);
-  } catch (error) {
-    return res.status(400).json({ error });
-  }
+  //try {
+  //console.log(req.body);
+  const blog = await Blog.create(req.body);
+  // jos tarvetta tämäkin käy...
+  //const blog = Blog.build(req.body);
+  //blog.likes = 1;
+  //await blog.save();
+  return res.json(blog);
+  //} catch (error) {
+  //  return res.status(400).json({ error });
+  //}
 });
 
 router.get("/:id", blogFinder, async (req, res) => {

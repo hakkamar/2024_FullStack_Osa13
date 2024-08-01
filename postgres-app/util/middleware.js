@@ -1,7 +1,6 @@
-/*
 const logger = require("./logger");
-const User = require("../models/user");
-const jwt = require("jsonwebtoken");
+//const User = require("../models/user");
+//const jwt = require("jsonwebtoken");
 
 const requestLogger = (request, response, next) => {
   logger.info("Method:", request.method);
@@ -17,6 +16,7 @@ const unknownEndpoint = (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message);
+  //logger.error(error.name);
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
@@ -26,10 +26,15 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: "token missing or invalid" });
   } else if (error.name === "TokenExpiredError") {
     return response.status(401).json({ error: "token expired" });
+  } else if (error.name === "SequelizeValidationError") {
+    return response.status(400).json({ error: error.message });
+  } else if (error.name === "SequelizeDatabaseError") {
+    return response.status(400).json({ error: error.message });
   }
   next(error);
 };
 
+/*
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get("authorization");
   if (authorization && authorization.startsWith("Bearer ")) {
@@ -53,12 +58,12 @@ const userExtractor = async (request, response, next) => {
   }
   next();
 };
+*/
 
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor,
-  userExtractor,
+  //tokenExtractor,
+  //userExtractor,
 };
-*/
