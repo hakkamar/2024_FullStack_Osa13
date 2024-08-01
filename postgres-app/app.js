@@ -1,3 +1,4 @@
+/*
 //const http = require("http");
 const config = require("./utils/config");
 const express = require("express");
@@ -17,7 +18,7 @@ const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 
 logger.info("connecting to", config.POSTGRESDB_URI);
-
+/*
 /*
 mongoose
   .connect(config.MONGODB_URI)
@@ -28,7 +29,7 @@ mongoose
     logger.error("error connection to MongoDB:", error.message);
   });
 */
-
+/*
 const morgan = require("morgan");
 
 app.use(cors());
@@ -62,3 +63,4 @@ app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
 module.exports = app;
+/*
