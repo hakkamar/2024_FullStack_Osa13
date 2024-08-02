@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
         [sequelize.fn("COUNT", sequelize.col("*")), "blogs"],
         [sequelize.fn("SUM", sequelize.col("likes")), "likes"],
       ],
-      exclude: ["userId", "id", "likes", "url", "title"],
+      exclude: ["userId", "id", "likes", "url", "title", "year"],
     },
     group: ["author"],
     order: [["likes", "DESC"]],

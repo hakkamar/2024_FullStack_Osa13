@@ -39,10 +39,10 @@ const errorHandler = (error, request, response, next) => {
 
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get("authorization");
-  console.log("authorization", authorization);
+  //console.log("authorization", authorization);
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
     try {
-      console.log(authorization.substring(7));
+      //console.log(authorization.substring(7));
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
     } catch (error) {
       console.log(error);
