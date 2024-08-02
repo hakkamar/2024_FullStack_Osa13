@@ -56,15 +56,25 @@ router.put("/:id", blogFinder, async (req, res) => {
   }
 });
 
-router.delete("/:id", blogFinder, async (req, res) => {
-  //const blog = await Blog.findByPk(req.params.id);
-  if (req.blog) {
-    await req.blog.destroy();
-    //await Blog.destroy({
-    //  where: {
-    //    id: req.params.id,
-    //  },
-    //});
+router.delete("/:id", middleware.tokenExtractor, async (req, res) => {
+  const user = await User.findByPk(req.decodedToken.id);
+  const blog = await Blog.findByPk(req.params.id);
+
+  if (blog) {
+    if (user) {
+      if (user.id === blog.userId) {
+        //await Blog.destroy({
+        //  where: {
+        //    id: req.params.id,
+        //  },
+        //});
+        await blog.destroy();
+      } else {
+        res.status(401).json({ error: "only own blogs can be deleted" });
+      }
+    } else {
+      return res.status(401).json({ error: "token invalid" });
+    }
   }
   res.status(204).end();
 });
