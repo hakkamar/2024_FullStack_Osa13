@@ -1,8 +1,9 @@
 const router = require("express").Router();
 
 const { Blog } = require("../models");
-
 const { sequelize } = require("../util/db");
+
+/*
 const { QueryTypes } = require("sequelize");
 
 router.get("/", async (req, res) => {
@@ -14,8 +15,8 @@ router.get("/", async (req, res) => {
   );
   res.json(blogs);
 });
+*/
 
-/*
 router.get("/", async (req, res) => {
   const blogs = await Blog.findAll({
     attributes: {
@@ -30,5 +31,5 @@ router.get("/", async (req, res) => {
   });
   res.json(blogs);
 });
-*/
+
 module.exports = router;
