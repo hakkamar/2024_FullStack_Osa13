@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const { User, Blog, Readinglist } = require("../models");
+const { Op } = require("sequelize");
 
 router.get("/", async (req, res) => {
   const users = await User.findAll({
@@ -18,6 +19,15 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+  let where = {};
+  // Mikäli annetu myös /api/users/:id?read=
+  // haetaan kaikki vain annetun ehdon mukaan read true/false
+  if (req.query.read) {
+    where = {
+      read: req.query.read,
+    };
+  }
+
   const user = await User.findOne({
     where: { id: req.params.id },
     //attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -29,6 +39,7 @@ router.get("/:id", async (req, res) => {
       {
         model: Readinglist,
         as: "readings",
+        where,
         attributes: ["id", "read"],
         through: {
           attributes: [],
